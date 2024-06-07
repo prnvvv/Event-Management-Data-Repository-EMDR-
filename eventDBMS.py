@@ -79,23 +79,24 @@ class Registration(Event, Attendees):
         cursor.execute(registrationTable)
         conn.commit()
 
-    def addValues(self):
+    '''def addValues(self):
         Event.addValues(self)
         Attendees.addValues(self)
 
         cursor.execute("SELECT EventID FROM Event WHERE EventName = %s AND Date = %s AND Location = %s",
-                       (self.eventName, self.date, self.location))
+                    (self.eventName, self.date, self.location))
         EventID = cursor.fetchone()[0]
 
         cursor.execute("SELECT AttendeeID FROM Attendees WHERE AttendeeName = %s AND AttendeeEmail = %s",
-                       (self.attendeeName, self.email))
+                    (self.attendeeName, self.email))
         AttendeeID = cursor.fetchone()[0]
 
         insert_data = """
-        INSERT INTO Registration (EventID, AttendeeID, EventName, AttendeeName) VALUES (%i, %i, %s, %s)
+        INSERT INTO Registration (EventID, AttendeeID, EventName, AttendeeName) VALUES (%s, %s, %s, %s)
         """
         cursor.execute(insert_data, (EventID, AttendeeID, self.eventName, self.attendeeName))
-        conn.commit()
+        conn.commit()'''
+
 
 event = Event("Conference", "2024-07-01", "New York")
 event.createTable()
@@ -105,6 +106,3 @@ attendee = Attendees("John Doe", "john.doe@example.com")
 attendee.createTable()
 attendee.addValues()
 
-registration = Registration("Conference", "2024-07-01", "New York", "John Doe", "john.doe@example.com")
-registration.createTable()
-registration.addValues()
