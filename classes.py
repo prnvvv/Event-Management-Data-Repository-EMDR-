@@ -1,6 +1,5 @@
 import mysql.connector
 
-# Connect to MySQL
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -11,38 +10,30 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 def createTriggers():
-    trigger_event_update = """
-    DELIMITER //
-
-    CREATE TRIGGER after_event_update
+    trigger_eventUpdate_p1 = """
+    CREATE TRIGGER IF NOT EXISTS after_eventUpdate
     AFTER UPDATE ON Event
     FOR EACH ROW
     BEGIN
         UPDATE Registration
         SET EventName = NEW.EventName
         WHERE EventID = OLD.EventID;
-    END//
+    END;"""
 
-    DELIMITER ;
-    """
-
-    trigger_attendees_update = """
-    DELIMITER //
-
-    CREATE TRIGGER after_attendees_update
+    trigger_attendeesUpdate_p1 = """
+    CREATE TRIGGER IF NOT EXISTS after_attendeesUpdate
     AFTER UPDATE ON Attendees
     FOR EACH ROW
     BEGIN
         UPDATE Registration
         SET AttendeeName = NEW.AttendeeName
         WHERE AttendeeID = OLD.AttendeeID;
-    END//
+    END;"""
 
-    DELIMITER ;
-    """
-    cursor.execute(trigger_event_update)
-    cursor.execute(trigger_attendees_update)
+    cursor.execute(trigger_eventUpdate_p1)
+    cursor.execute(trigger_attendeesUpdate_p1)
     conn.commit()
+
 
 class Event:
 
@@ -52,7 +43,7 @@ class Event:
         self.location = location
         self.data = [(self.eventName, self.date, self.location)]
 
-    def createTable(self):
+    def CreateTable(self):
         eventTable = """
         CREATE TABLE IF NOT EXISTS Event(
         EventID INT AUTO_INCREMENT PRIMARY KEY,
@@ -62,13 +53,15 @@ class Event:
         cursor.execute(eventTable)
         conn.commit()
 
-    def addValues(self):
-        insertData = """
+    def AddValues(self):
+        print(self.data)
+
+        '''insertData = """
         INSERT INTO Event (EventName, Date, Location) VALUES (%s, %s, %s)
         """
         for data in self.data:
             cursor.execute(insertData, data)
-        conn.commit()
+        conn.commit()'''
 
     def ModifyValues(self, option):
         if option == 1:
@@ -99,7 +92,7 @@ class Attendees:
         self.email = email
         self.data = [(self.attendeeName, self.email)]
 
-    def createTable(self):
+    def CreateTable(self):
         attendeeTable = """
         CREATE TABLE IF NOT EXISTS Attendees(
         AttendeeID INT AUTO_INCREMENT PRIMARY KEY,
@@ -108,7 +101,7 @@ class Attendees:
         cursor.execute(attendeeTable)
         conn.commit()
 
-    def addValues(self):
+    def AddValues(self):
         insertData = """
         INSERT INTO Attendees (AttendeeName, AttendeeEmail) VALUES (%s, %s)  
         """
@@ -168,3 +161,14 @@ class Registration(Event, Attendees):
         """
         cursor.execute(insertData, (EventID, AttendeeID, self.eventName, self.attendeeName))
         conn.commit()
+
+event = Event("Conference", "2023-06-01", "New York")
+attendee = Attendees("John Doe", "john.doe@example.com")
+registration = Registration("Conference", "2023-06-01", "New York", "John Doe", "john.doe@example.com")
+
+event.CreateTable()
+attendee.CreateTable()
+registration.CreateTable()
+createTriggers()
+
+event.AddValues()
