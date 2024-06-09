@@ -10,6 +10,41 @@ conn = mysql.connector.connect(
 
 cursor = conn.cursor()
 
+def createTriggers():
+    trigger_event_update = """
+    DELIMITER //
+
+    CREATE TRIGGER after_event_update
+    AFTER UPDATE ON Event
+    FOR EACH ROW
+    BEGIN
+        UPDATE Registration
+        SET EventName = NEW.EventName
+        WHERE EventID = OLD.EventID;
+    END//
+
+    DELIMITER ;
+    """
+
+    trigger_attendees_update = """
+    DELIMITER //
+
+    CREATE TRIGGER after_attendees_update
+    AFTER UPDATE ON Attendees
+    FOR EACH ROW
+    BEGIN
+        UPDATE Registration
+        SET AttendeeName = NEW.AttendeeName
+        WHERE AttendeeID = OLD.AttendeeID;
+    END//
+
+    DELIMITER ;
+    """
+    # Execute the trigger creation statements
+    cursor.execute(trigger_event_update)
+    cursor.execute(trigger_attendees_update)
+    conn.commit()
+
 class Event:
 
     def __init__(self, eventName, date, location):
@@ -41,17 +76,22 @@ class Event:
             neventName = input("Enter the new Event Name : ")
             modifyData = f"UPDATE Event SET EventName = %s WHERE EventName = %s"
             cursor.execute(modifyData, (neventName, self.eventName))
+            self.eventName = neventName
             conn.commit()
-        if option == 2:
-            neventDate = input("Enter the new Event Date : ")
-            modifyData = f"UPDATE Event SET Date = %s WHERE EventDate = %s"
+        elif option == 2:
+            neventDate = input("Enter the new Event Date (YYYY-MM-DD) : ")
+            modifyData = f"UPDATE Event SET Date = %s WHERE Date = %s"
             cursor.execute(modifyData, (neventDate, self.date))
+            self.date = neventDate
             conn.commit()            
-        if option == 3:
-            neventDate = input("Enter the new Event Location : ")
+        elif option == 3:
+            nLocation = input("Enter the new Event Location : ")
             modifyData = f"UPDATE Event SET Location = %s WHERE Location = %s"
-            cursor.execute(modifyData, (neventDate, self.date))
+            cursor.execute(modifyData, (nLocation, self.location))
+            self.location = nLocation
             conn.commit()
+        else:
+            print("Invalid Option")
 
 class Attendees:
 
@@ -76,6 +116,22 @@ class Attendees:
         for data in self.data:
             cursor.execute(insertData, data)
         conn.commit()
+
+    def ModifyValues(self, option):
+        if option == 1:
+            nattendeeName = input("Enter the new Event Name : ")
+            modifyData = f"UPDATE Attendees SET AttendeeName = %s WHERE AttendeeName = %s"
+            cursor.execute(modifyData, (nattendeeName, self.attendeeName))
+            self.attendeeName = nattendeeName
+            conn.commit()
+        elif option == 2:
+            nattendeeEmail = input("Enter the new Attendee Email : ")
+            modifyData = f"UPDATE Attendees SET AttendeeEmail = %s WHERE AttendeeEmail = %s"
+            cursor.execute(modifyData, (nattendeeEmail, self.email))
+            self.email = nattendeeEmail
+            conn.commit()
+        else:
+            print("Invalid Option")          
 
 class Registration(Event, Attendees):
 
