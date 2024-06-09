@@ -36,6 +36,23 @@ class Event:
             cursor.execute(insertData, data)
         conn.commit()
 
+    def ModifyValues(self, option):
+        if option == 1:
+            neventName = input("Enter the new Event Name : ")
+            modifyData = f"UPDATE Event SET EventName = %s WHERE EventName = %s"
+            cursor.execute(modifyData, (neventName, self.eventName))
+            conn.commit()
+        if option == 2:
+            neventDate = input("Enter the new Event Date : ")
+            modifyData = f"UPDATE Event SET Date = %s WHERE EventDate = %s"
+            cursor.execute(modifyData, (neventDate, self.date))
+            conn.commit()            
+        if option == 3:
+            neventDate = input("Enter the new Event Location : ")
+            modifyData = f"UPDATE Event SET Location = %s WHERE Location = %s"
+            cursor.execute(modifyData, (neventDate, self.date))
+            conn.commit()
+
 class Attendees:
 
     def __init__(self, attendeeName, email):
@@ -66,7 +83,7 @@ class Registration(Event, Attendees):
         Event.__init__(self, eventName, date, location)
         Attendees.__init__(self, attendeeName, email)
 
-    def createTable(self):
+    def CreateTable(self):
         registrationTable = """
         CREATE TABLE IF NOT EXISTS Registration(
         RegistrationID INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,7 +96,7 @@ class Registration(Event, Attendees):
         cursor.execute(registrationTable)
         conn.commit()
 
-    '''def addValues(self):
+    def AddValues(self):
         Event.addValues(self)
         Attendees.addValues(self)
 
@@ -91,18 +108,8 @@ class Registration(Event, Attendees):
                     (self.attendeeName, self.email))
         AttendeeID = cursor.fetchone()[0]
 
-        insert_data = """
+        insertData = """
         INSERT INTO Registration (EventID, AttendeeID, EventName, AttendeeName) VALUES (%s, %s, %s, %s)
         """
-        cursor.execute(insert_data, (EventID, AttendeeID, self.eventName, self.attendeeName))
-        conn.commit()'''
-
-
-event = Event("Conference", "2024-07-01", "New York")
-event.createTable()
-event.addValues()
-
-attendee = Attendees("John Doe", "john.doe@example.com")
-attendee.createTable()
-attendee.addValues()
-
+        cursor.execute(insertData, (EventID, AttendeeID, self.eventName, self.attendeeName))
+        conn.commit()
