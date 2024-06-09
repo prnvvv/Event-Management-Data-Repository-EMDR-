@@ -170,3 +170,4 @@ registration.CreateTable()
 createTriggers()
 
 event.AddValues()
+attendee.AddValues()
