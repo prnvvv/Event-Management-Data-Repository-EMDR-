@@ -40,7 +40,6 @@ def createTriggers():
 
     DELIMITER ;
     """
-    # Execute the trigger creation statements
     cursor.execute(trigger_event_update)
     cursor.execute(trigger_attendees_update)
     conn.commit()
