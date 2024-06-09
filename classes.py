@@ -54,14 +54,12 @@ class Event:
         conn.commit()
 
     def AddValues(self):
-        print(self.data)
-
-        '''insertData = """
+        insertData = """
         INSERT INTO Event (EventName, Date, Location) VALUES (%s, %s, %s)
         """
         for data in self.data:
             cursor.execute(insertData, data)
-        conn.commit()'''
+        conn.commit()
 
     def ModifyValues(self, option):
         if option == 1:
