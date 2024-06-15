@@ -4,7 +4,7 @@ import mysql.connector
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="your_password",
+    password="prnv2005",
     database="eventDBMS"
 )
 
