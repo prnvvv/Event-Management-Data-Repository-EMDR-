@@ -41,7 +41,6 @@ class Event:
         self.eventName = eventName
         self.date = date
         self.location = location
-        self.data = [(self.eventName, self.date, self.location)]
 
     def CreateTable(self):
         eventTable = """
@@ -57,38 +56,57 @@ class Event:
         insertData = """
         INSERT INTO Event (EventName, Date, Location) VALUES (%s, %s, %s)
         """
-        for data in self.data:
-            cursor.execute(insertData, data)
+        data = (self.eventName, self.date, self.location)
+        cursor.execute(insertData, data)
         conn.commit()
 
     def ModifyValues(self, option):
         if option == 1:
             neventName = input("Enter the new Event Name : ")
-            modifyData = f"UPDATE Event SET EventName = %s WHERE EventName = %s"
+            modifyData = "UPDATE Event SET EventName = %s WHERE EventName = %s"
             cursor.execute(modifyData, (neventName, self.eventName))
             self.eventName = neventName
             conn.commit()
         elif option == 2:
             neventDate = input("Enter the new Event Date (YYYY-MM-DD) : ")
-            modifyData = f"UPDATE Event SET Date = %s WHERE Date = %s"
+            modifyData = "UPDATE Event SET Date = %s WHERE Date = %s"
             cursor.execute(modifyData, (neventDate, self.date))
             self.date = neventDate
-            conn.commit()            
+            conn.commit()
         elif option == 3:
             nLocation = input("Enter the new Event Location : ")
-            modifyData = f"UPDATE Event SET Location = %s WHERE Location = %s"
+            modifyData = "UPDATE Event SET Location = %s WHERE Location = %s"
             cursor.execute(modifyData, (nLocation, self.location))
             self.location = nLocation
             conn.commit()
         else:
             print("Invalid Option")
 
+    def DeleteValues(self, option):
+        if option == 1:
+            deventName = input("Enter the Event Name : ")
+            deleteData = "DELETE FROM Event WHERE EventName = %s"
+            cursor.execute(deleteData, (deventName,))
+            conn.commit()
+        elif option == 2:
+            deventDate = input("Enter the Event Date (YYYY-MM-DD) : ")
+            deleteData = "DELETE FROM Event WHERE Date = %s"
+            cursor.execute(deleteData, (deventDate,))
+            conn.commit()
+        elif option == 3:
+            dLocation = input("Enter the Event Location : ")
+            deleteData = "DELETE FROM Event WHERE Location = %s"
+            cursor.execute(deleteData, (dLocation,))
+            conn.commit()
+        else:
+            print("Invalid Option")
+
+
 class Attendees:
 
     def __init__(self, attendeeName, email):
         self.attendeeName = attendeeName
         self.email = email
-        self.data = [(self.attendeeName, self.email)]
 
     def CreateTable(self):
         attendeeTable = """
@@ -101,27 +119,42 @@ class Attendees:
 
     def AddValues(self):
         insertData = """
-        INSERT INTO Attendees (AttendeeName, AttendeeEmail) VALUES (%s, %s)  
+        INSERT INTO Attendees (AttendeeName, AttendeeEmail) VALUES (%s, %s)
         """
-        for data in self.data:
-            cursor.execute(insertData, data)
+        data = (self.attendeeName, self.email)
+        cursor.execute(insertData, data)
         conn.commit()
 
     def ModifyValues(self, option):
         if option == 1:
-            nattendeeName = input("Enter the new Event Name : ")
-            modifyData = f"UPDATE Attendees SET AttendeeName = %s WHERE AttendeeName = %s"
+            nattendeeName = input("Enter the new Attendee Name : ")
+            modifyData = "UPDATE Attendees SET AttendeeName = %s WHERE AttendeeName = %s"
             cursor.execute(modifyData, (nattendeeName, self.attendeeName))
             self.attendeeName = nattendeeName
             conn.commit()
         elif option == 2:
             nattendeeEmail = input("Enter the new Attendee Email : ")
-            modifyData = f"UPDATE Attendees SET AttendeeEmail = %s WHERE AttendeeEmail = %s"
+            modifyData = "UPDATE Attendees SET AttendeeEmail = %s WHERE AttendeeEmail = %s"
             cursor.execute(modifyData, (nattendeeEmail, self.email))
             self.email = nattendeeEmail
             conn.commit()
         else:
-            print("Invalid Option")          
+            print("Invalid Option")
+
+    def DeleteValues(self, option):
+        if option == 1:
+            dattendeeName = input("Enter the Attendee Name : ")
+            deleteData = "DELETE FROM Attendees WHERE AttendeeName = %s"
+            cursor.execute(deleteData, (dattendeeName,))
+            conn.commit()
+        elif option == 2:
+            demail = input("Enter the Attendee Email : ")
+            deleteData = "DELETE FROM Attendees WHERE AttendeeEmail = %s"
+            cursor.execute(deleteData, (demail,))
+            conn.commit()
+        else:
+            print("Invalid Option")
+
 
 class Registration(Event, Attendees):
 
@@ -143,15 +176,15 @@ class Registration(Event, Attendees):
         conn.commit()
 
     def AddValues(self):
-        Event.addValues(self)
-        Attendees.addValues(self)
+        Event.AddValues(self)
+        Attendees.AddValues(self)
 
         cursor.execute("SELECT EventID FROM Event WHERE EventName = %s AND Date = %s AND Location = %s",
-                    (self.eventName, self.date, self.location))
+                       (self.eventName, self.date, self.location))
         EventID = cursor.fetchone()[0]
 
         cursor.execute("SELECT AttendeeID FROM Attendees WHERE AttendeeName = %s AND AttendeeEmail = %s",
-                    (self.attendeeName, self.email))
+                       (self.attendeeName, self.email))
         AttendeeID = cursor.fetchone()[0]
 
         insertData = """
@@ -160,6 +193,9 @@ class Registration(Event, Attendees):
         cursor.execute(insertData, (EventID, AttendeeID, self.eventName, self.attendeeName))
         conn.commit()
 
+
+# Uncomment to test functionality
+'''
 event = Event("Conference", "2023-06-01", "New York")
 attendee = Attendees("John Doe", "john.doe@example.com")
 registration = Registration("Conference", "2023-06-01", "New York", "John Doe", "john.doe@example.com")
@@ -171,3 +207,5 @@ createTriggers()
 
 event.AddValues()
 attendee.AddValues()
+registration.AddValues()
+'''
