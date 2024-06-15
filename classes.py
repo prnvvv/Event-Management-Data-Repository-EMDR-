@@ -1,5 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
+import numpy as np
+import pandas as pd
 
 try:
     conn = mysql.connector.connect(
@@ -92,6 +94,55 @@ class Event:
                 print("Invalid Option")
         except Error as e:
             print(f"Error deleting Event: {e}")
+    
+    def PrintData(self, option):
+        try:
+            if option == 1:
+                cursor.execute("SELECT * FROM Event")
+                rows = cursor.fetchall()
+
+                tableArray = []
+                tableArray = np.array(tableArray)
+                for row in rows:
+                    tableArray.append(row)
+                
+                print(pd.DataFrame(tableArray))
+            if option == 2:
+                eventName = input("Enter the Event Name")
+                query = "SELECT * FROM Event WHERE EventName = %s"
+                cursor.execute(query, (eventName))
+
+                event = cursor.fetchone()
+
+                if event:
+                    print(f"EventID: {event[0]}")
+                    print(f"EventName: {event[1]}")
+                    print(f"Date: {event[2]}")
+                    print(f"Location: {event[3]}")
+                else:
+                    print(f"No event found with name '{eventName}'")
+            if option == 3:
+                eventDate = input("Enter the Event Date")
+                query = "SELECT * FROM Event WHERE Date = %s"
+                cursor.execute(query, (eventDate))
+
+                events = cursor.fetchall()
+
+                for index, event in enumerate(events):
+                    if event:
+                        print(f"{index}.")
+                        print(f"EventID: {event[0]}")
+                        print(f"EventName: {event[1]}")
+                        print(f"Date: {event[2]}")
+                        print(f"Location: {event[3]}")
+                    else:
+                        print(f"No event found with name '{eventName}'")
+
+
+
+
+                
+
 
 
 class Attendees:
