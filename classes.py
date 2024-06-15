@@ -88,16 +88,31 @@ class Event:
             deleteData = "DELETE FROM Event WHERE EventName = %s"
             cursor.execute(deleteData, (deventName,))
             conn.commit()
+
+            deleteRegData = "DELETE FROM Registration WHERE EventName = %s"
+            cursor.execute(deleteRegData, (deventName,))
+            conn.commit()
+    
         elif option == 2:
             deventDate = input("Enter the Event Date (YYYY-MM-DD) : ")
             deleteData = "DELETE FROM Event WHERE Date = %s"
             cursor.execute(deleteData, (deventDate,))
             conn.commit()
+
+            deleteRegData = "DELETE FROM Registration WHERE EventName = %s"
+            cursor.execute(deleteRegData, (deventName,))
+            conn.commit()
+
         elif option == 3:
             dLocation = input("Enter the Event Location : ")
             deleteData = "DELETE FROM Event WHERE Location = %s"
             cursor.execute(deleteData, (dLocation,))
             conn.commit()
+
+            deleteRegData = "DELETE FROM Registration WHERE EventName = %s"
+            cursor.execute(deleteRegData, (deventName,))
+            conn.commit()
+
         else:
             print("Invalid Option")
 
@@ -147,6 +162,11 @@ class Attendees:
             deleteData = "DELETE FROM Attendees WHERE AttendeeName = %s"
             cursor.execute(deleteData, (dattendeeName,))
             conn.commit()
+
+            deleteRegData = "DELETE FROM Registration WHERE AttendeeName = %s"
+            cursor.execute(deleteRegData, (dattendeeName))
+            conn.commit()
+
         elif option == 2:
             demail = input("Enter the Attendee Email : ")
             deleteData = "DELETE FROM Attendees WHERE AttendeeEmail = %s"
