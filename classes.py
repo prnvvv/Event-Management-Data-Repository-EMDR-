@@ -154,7 +154,8 @@ class Event:
                         print(f"Location: {event[3]}")
                     else:
                         print(f"No event found on the Location '{Location}'")
-
+        except Error as e:
+            print(f"Error while Printing data, '{e}'")
 
 class Attendees:
 
