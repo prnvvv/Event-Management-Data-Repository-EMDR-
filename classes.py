@@ -136,13 +136,24 @@ class Event:
                         print(f"Date: {event[2]}")
                         print(f"Location: {event[3]}")
                     else:
-                        print(f"No event found with name '{eventName}'")
+                        print(f"No event found on '{eventDate}'")
 
+            if option == 4:
+                Location = input("Enter the Event Location")
+                query = "SELECT * FROM Event WHERE Location = %s"
+                cursor.execute(query, (Location))
 
+                events = cursor.fetchall()
 
-
-                
-
+                for index, event in enumerate(events):
+                    if event:
+                        print(f"{index}.")
+                        print(f"EventID: {event[0]}")
+                        print(f"EventName: {event[1]}")
+                        print(f"Date: {event[2]}")
+                        print(f"Location: {event[3]}")
+                    else:
+                        print(f"No event found on the Location '{Location}'")
 
 
 class Attendees:
