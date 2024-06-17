@@ -399,16 +399,3 @@ class Registration:
         except Error as e:
             print(f"Error creating triggers: {e}")
 
-# Example usage:
-event = Event("Conference 2024", "2024-10-15", "New York")
-event.CreateTable()
-event.AddValues()
-
-attendee = Attendees("John Doe", "john@example.com")
-attendee.CreateTable()
-attendee.AddValues()
-
-registration = Registration()
-registration.CreateTable()
-registration.AddValues(1, 1, "Conference 2024", "John Doe")
-registration.CreateTriggers()
