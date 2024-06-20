@@ -1,5 +1,5 @@
 from Triggers import CreateTriggers
-from EventsClass import Event
+from EventsClass import Event as event
 from AttendeesClass import Attendees
 from RegistrationClass import Registration
 
@@ -22,7 +22,7 @@ options = int(input("Enter your desired option: "))
 print()
 
 if options == 1:
-    EventObject = Event()
+    EventObject = event()
     print("EVENTS")
     print()
     print("MENU")
