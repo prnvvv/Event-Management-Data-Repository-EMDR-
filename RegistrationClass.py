@@ -7,7 +7,14 @@ conn, cursor = Cursor()
 
 class Registration:
 
-    def CreateTable(self):
+    def __init__(self, eventID=None, attendeeID=None, eventName=None, attendeeName=None):
+        self.eventID = eventID
+        self.attendeeID = attendeeID
+        self.eventName = eventName
+        self.attendeeName = attendeeName
+
+    @classmethod
+    def CreateTable(cls):
         try:
             registrationTable = """
             CREATE TABLE IF NOT EXISTS Registration(
@@ -24,12 +31,12 @@ class Registration:
         except Error as e:
             print(f"Error creating Registration table: {e}")
 
-    def AddValues(self, eventID, attendeeID, eventName, attendeeName):
+    def AddValues(self):
         try:
             insertData = """
             INSERT INTO Registration (EventID, AttendeeID, EventName, AttendeeName) VALUES (%s, %s, %s, %s)
             """
-            data = (eventID, attendeeID, eventName, attendeeName)
+            data = (self.eventID, self.attendeeID, self.eventName, self.attendeeName)
             cursor.execute(insertData, data)
             conn.commit()
         except Error as e:
@@ -37,26 +44,24 @@ class Registration:
 
     def ModifyValues(self, option):
         try:
+            registrationID = input("Enter the Registration ID to modify: ")
+
             if option == 1:
-                registrationID = input("Enter the Registration ID to modify: ")
                 newEventID = input("Enter the new Event ID: ")
                 modifyData = "UPDATE Registration SET EventID = %s WHERE RegistrationID = %s"
                 cursor.execute(modifyData, (newEventID, registrationID))
                 conn.commit()
             elif option == 2:
-                registrationID = input("Enter the Registration ID to modify: ")
                 newAttendeeID = input("Enter the new Attendee ID: ")
                 modifyData = "UPDATE Registration SET AttendeeID = %s WHERE RegistrationID = %s"
                 cursor.execute(modifyData, (newAttendeeID, registrationID))
                 conn.commit()
             elif option == 3:
-                registrationID = input("Enter the Registration ID to modify: ")
                 newEventName = input("Enter the new Event Name: ")
                 modifyData = "UPDATE Registration SET EventName = %s WHERE RegistrationID = %s"
                 cursor.execute(modifyData, (newEventName, registrationID))
                 conn.commit()
             elif option == 4:
-                registrationID = input("Enter the Registration ID to modify: ")
                 newAttendeeName = input("Enter the new Attendee Name: ")
                 modifyData = "UPDATE Registration SET AttendeeName = %s WHERE RegistrationID = %s"
                 cursor.execute(modifyData, (newAttendeeName, registrationID))
@@ -66,8 +71,9 @@ class Registration:
         except Error as e:
             print(f"Error modifying Registration: {e}")
 
-    def DeleteValues(self, registrationID):
+    def DeleteValues(self):
         try:
+            registrationID = input("Enter the Registration ID to delete: ")
             deleteData = "DELETE FROM Registration WHERE RegistrationID = %s"
             cursor.execute(deleteData, (registrationID,))
             conn.commit()
@@ -82,7 +88,7 @@ class Registration:
 
                 tableArray = np.array(rows)
                 print(pd.DataFrame(tableArray, columns=["RegistrationID", "EventID", "AttendeeID", "EventName", "AttendeeName"]))
-            if option == 2:
+            elif option == 2:
                 registrationID = input("Enter the Registration ID: ")
                 query = "SELECT * FROM Registration WHERE RegistrationID = %s"
                 cursor.execute(query, (registrationID,))
@@ -93,7 +99,7 @@ class Registration:
                     print(pd.DataFrame(tableArray, columns=["RegistrationID", "EventID", "AttendeeID", "EventName", "AttendeeName"]))
                 else:
                     print(f"No registration found with ID '{registrationID}'")
-            if option == 3:
+            elif option == 3:
                 eventID = input("Enter the Event ID: ")
                 query = "SELECT * FROM Registration WHERE EventID = %s"
                 cursor.execute(query, (eventID,))
@@ -104,7 +110,7 @@ class Registration:
                     print(pd.DataFrame(tableArray, columns=["RegistrationID", "EventID", "AttendeeID", "EventName", "AttendeeName"]))
                 else:
                     print(f"No registrations found for event ID '{eventID}'")
-            if option == 4:
+            elif option == 4:
                 attendeeID = input("Enter the Attendee ID: ")
                 query = "SELECT * FROM Registration WHERE AttendeeID = %s"
                 cursor.execute(query, (attendeeID,))
