@@ -41,13 +41,24 @@ while True:
 
         print()
 
-        if eventOption == 1:
-            Event.CreateTable()
-        elif eventOption == 2:
-            nEvents = int(input("Enter the number of datas you want to add: "))
-            for i in range(nEvents):
-                eventName = input("Enter the Event Name: ")
-                eventDate = input("Enter the Event Date (yyyy/mm/dd): ")
-                eventLocation = input("Enter the Event Location: ")
-                Event(eventName, eventDate, eventLocation).AddValues()
-                
+        while True:
+            if eventOption == 1:
+                Event.CreateTable()
+            elif eventOption == 2:
+                nEvents = int(input("Enter the number of datas you want to add: "))
+                for i in range(nEvents):
+                    eventName = input("Enter the Event Name: ")
+                    eventDate = input("Enter the Event Date (yyyy/mm/dd): ")
+                    eventLocation = input("Enter the Event Location: ")
+                    Event(eventName, eventDate, eventLocation).AddValues()
+            elif eventOption == 3:
+                print("MODIFY MENU")
+                print()
+                print("1. To update Event Name")
+                print("2. To update Event Date")
+                print("3. To update Event Location")
+                print()
+                modifyEventOption = int(input("Enter the desired option: "))
+                Event().ModifyValues(modifyEventOption)
+
+
