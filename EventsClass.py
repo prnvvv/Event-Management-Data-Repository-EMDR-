@@ -7,7 +7,7 @@ conn, cursor = Cursor()
 
 class Event:
 
-    def __init__(self, eventName, date, location):
+    def __init__(self, eventName = None, date = None, location = None):
         self.eventName = eventName
         self.date = date
         self.location = location
