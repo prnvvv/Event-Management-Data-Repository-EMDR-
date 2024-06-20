@@ -5,6 +5,11 @@ from RegistrationClass import Registration
 
 print("Welcome to Event Database Management System")
 
-print("MENU")
+print("MENU FOR ACCESSING:")
 
-print("1. ")
+print("1. Events")
+print("2. Attendees")
+print("3. Registrations")
+
+options = int(input("Enter your desired option: "))
+
