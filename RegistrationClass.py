@@ -278,11 +278,3 @@ class Registration:
         except Error as e:
             print(f"Error while printing data: {e}")
 
-# Example usage:
-if __name__ == "__main__":
-    attendee = Attendees()  # Create an instance of Attendees class
-    registration = Registration()  # Create an instance of Registration class
-
-    while True:
-        print()
-        print
