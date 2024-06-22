@@ -136,15 +136,3 @@ class Attendees:
         except Error as e:
             print(f"Error while printing data: {e}")
 
-# Example usage:
-if __name__ == "__main__":
-    attendee = Attendees()  # Create an instance of Attendees class
-
-    while True:
-        print()
-        print("MENU")
-        print("1. Create Attendees Table")
-        print("2. Add Attendee")
-        print("3. Modify Attendee")
-        print("4. Delete Attendee")
-        print
